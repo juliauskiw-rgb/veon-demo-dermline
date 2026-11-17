@@ -1,0 +1,33 @@
+---
+// B-F018: the laser hair removal offer, written as text (R-008). The term is unknown: the slot asks to check by phone.
+import Button from "../Button.astro";
+import FutureLink from "../FutureLink.astro";
+import { NOTE } from "../../data/clinic";
+---
+<section id="offer" class="offer layer layer--l1 section" data-rec="R-008,S-R015" aria-labelledby="offer-title">
+  <div class="offer__grid bleed">
+    <h2 id="offer-title" class="offer__phrase">Акція на лазерну епіляцію: ноги і глибоке бікіні, пахви — у подарунок</h2>
+    <p class="offer__save"><span class="offer__figure">520 ₴</span><span class="offer__unit">економія за акцією</span></p>
+    <div class="offer__foot">
+      <p class="muted">Термін дії акції уточнюйте за телефоном.</p>
+      <div class="offer__actions">
+        <Button href="#contacts">Записатися на епіляцію</Button>
+        <FutureLink note={NOTE}>Усі акції</FutureLink>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .offer__grid { row-gap: var(--space-4); align-items: end; }
+  .offer__phrase { font-weight: var(--weight-light); font-size: var(--text-section); line-height: var(--leading-head); max-width: 20ch; }
+  .offer__save { display: grid; gap: var(--space-1); }
+  .offer__figure { font-family: var(--font-display); font-weight: var(--weight-regular); font-size: var(--text-figure); line-height: 1; white-space: nowrap; }
+  .offer__unit { color: var(--ink-2); }
+  .offer__foot { display: grid; gap: var(--space-3); padding-top: var(--space-3); border-top: var(--line-w) solid var(--line); }
+  .offer__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); }
+  @media (min-width: 900px) {
+    .offer__phrase { grid-column: col-start 1 / span 8; }
+    .offer__save { grid-column: col-start 9 / span 4; justify-self: end; text-align: right; }
+    .offer__foot { grid-column: col-start 1 / span 12; grid-template-columns: minmax(0, 1fr) auto; align-items: center; margin-top: var(--space-4); }
+  }
+</style>

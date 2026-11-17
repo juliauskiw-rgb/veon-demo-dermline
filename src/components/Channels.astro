@@ -1,0 +1,31 @@
+---
+// Booking channels (3): phone, Telegram, Viber (company.contacts). Used in contacts, menu and the mobile bar.
+import Icon from "./Icon.astro";
+import { clinic } from "../data/clinic";
+interface Props { variant?: "large" | "bar" | "menu"; rec?: string; }
+const { variant = "large", rec } = Astro.props;
+---
+<ul class:list={["channels", `channels--${variant}`]} data-rec={rec}>
+  <li><a class="channel" href={clinic.phone.href}><Icon name="phone" /><span>Подзвонити</span></a></li>
+  <li><a class="channel" href={clinic.telegram} rel="noopener" target="_blank"><Icon name="telegram" /><span>Telegram</span></a></li>
+  <li><a class="channel" href={clinic.viber}><Icon name="viber" /><span>Viber</span></a></li>
+</ul>
+<style>
+  .channels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-1); }
+  .channel {
+    display: flex; align-items: center; justify-content: center; gap: var(--space-1);
+    min-height: var(--control-h-lg); padding: 0 var(--space-2);
+    border: var(--hairline) solid var(--ink-2); border-radius: var(--radius);
+    color: var(--ink); text-decoration: none; font-weight: var(--weight-medium); font-size: var(--text-small);
+    transition: transform var(--dur-press) var(--ease-out), background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .channel:hover { background: var(--ink); color: var(--paper); }
+  .channel:active { transform: scale(.98); }
+  .channels--large li:first-child .channel { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .channels--large li:first-child .channel:hover { opacity: .88; }
+  .channels--bar { gap: 0; }
+  .channels--bar .channel { border: 0; border-radius: 0; min-height: var(--bar-h); flex-direction: column; gap: var(--space-0); font-size: var(--text-tiny); }
+  .channels--bar li + li .channel { border-left: var(--hairline) solid var(--ink-2); }
+  @media (max-width: 380px) { .channels--large { grid-template-columns: minmax(0, 1fr); } }
+  @media (prefers-reduced-motion: reduce) { .channel:active { transform: none; } }
+</style>

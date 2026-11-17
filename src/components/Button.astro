@@ -1,0 +1,20 @@
+---
+// Primary action: ink fill on light layers, paper fill on dark layers (inverts through layer tokens).
+interface Props { href: string; class?: string; rec?: string; full?: boolean; external?: boolean; }
+const { href, class: cls, rec, full, external } = Astro.props;
+---
+<a class:list={["btn", { "btn--full": full }, cls]} href={href} data-rec={rec} {...(external ? { rel: "noopener", target: "_blank" } : {})}><slot /></a>
+<style>
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--space-1);
+    min-height: var(--control-h); padding: 0 var(--space-3);
+    background: var(--ink); color: var(--paper); border-radius: var(--radius);
+    font-family: var(--font-body); font-weight: var(--weight-medium); font-size: var(--text-small); line-height: 1.2;
+    text-decoration: none; text-align: center; white-space: nowrap;
+    transition: transform var(--dur-press) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+  }
+  .btn:hover { opacity: .88; }
+  .btn:active { transform: scale(.98); }
+  .btn--full { width: 100%; }
+  @media (prefers-reduced-motion: reduce) { .btn:active { transform: none; } }
+</style>

@@ -1,0 +1,151 @@
+---
+// «Що вас турбує?»: one copy of the content. Mobile and no-JS: native exclusive accordion (<details name>).
+// Desktop with JS: a vertical tab list drives which <details> is open; summaries are hidden.
+import Button from "../Button.astro";
+import FutureLink from "../FutureLink.astro";
+import { concerns, NOTE } from "../../data/clinic";
+---
+<section id="concerns" class="concerns layer section" data-rec="R-004" aria-labelledby="concerns-title">
+  <div class="concerns__grid bleed">
+    <div class="concerns__aside">
+      <h2 id="concerns-title" class="section__title">Що вас турбує?</h2>
+      <p class="concerns__hint muted">Задачі впорядковані від поверхні шкіри вглиб. Процедуру лікар підбирає на консультації.</p>
+      <div class="concerns__tabs" role="tablist" aria-label="Напрями" aria-orientation="vertical">
+        <span class="concerns__indicator" aria-hidden="true"></span>
+        {concerns.map((g, i) => (
+          <button class="concerns__tab" type="button" role="tab" id={`tab-${g.id}`} aria-controls={`panel-${g.id}`} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-group={g.id}>{g.label}</button>
+        ))}
+      </div>
+    </div>
+    <div class="concerns__panels">
+      {concerns.map((g, i) => (
+        <details class="concern" name="concerns" open={i === 0} data-group={g.id}>
+          <summary class="concern__summary"><h3 class="concern__label">{g.label}</h3><span class="concern__chev" aria-hidden="true"></span></summary>
+          <div class="concern__body" id={`panel-${g.id}`}>
+            <div class="depth">
+              <ol class="depth__list">
+                {g.items.map((it) => (
+                  <li class="depth__item">
+                    <p class="depth__problem">{it.problem}</p>
+                    <p class="depth__proc">{it.procedures}</p>
+                  </li>
+                ))}
+              </ol>
+              <ul class="depth__scale" aria-label="Глибина">
+                {g.layers.map((l) => <li>{l}</li>)}
+              </ul>
+            </div>
+            <div class="concern__foot">
+              <Button href="#contacts">Записатися на консультацію</Button>
+              <FutureLink note={NOTE}>Усі процедури напряму</FutureLink>
+              <p class="concern__price muted"><span>Вартість — після консультації.</span> <FutureLink note={NOTE}>Ціни</FutureLink></p>
+            </div>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+<script>
+  const root = document.getElementById("concerns");
+  const mq = window.matchMedia("(min-width: 900px)");
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>(".concerns__tab"));
+    const panels = Array.from(root.querySelectorAll<HTMLDetailsElement>(".concern"));
+    const indicator = root.querySelector<HTMLElement>(".concerns__indicator");
+    const mark = (id: string) => {
+      tabs.forEach((t) => {
+        const on = t.dataset.group === id;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        if (on && indicator) indicator.style.transform = `translateY(${t.offsetTop}px)`;
+      });
+    };
+    const select = (id: string, focus = false) => {
+      mark(id);
+      panels.forEach((p) => { p.open = p.dataset.group === id; });
+      if (focus) tabs.find((t) => t.dataset.group === id)?.focus();
+    };
+    root.classList.add("is-tabs");
+    panels.forEach((p) => {
+      const body = p.querySelector<HTMLElement>(".concern__body");
+      body?.setAttribute("role", "tabpanel");
+      body?.setAttribute("aria-labelledby", `tab-${p.dataset.group}`);
+      p.addEventListener("toggle", () => { if (p.open) mark(p.dataset.group!); });
+    });
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(t.dataset.group!));
+      t.addEventListener("keydown", (e) => {
+        let n = -1;
+        if (e.key === "ArrowDown" || e.key === "ArrowRight") n = (i + 1) % tabs.length;
+        if (e.key === "ArrowUp" || e.key === "ArrowLeft") n = (i - 1 + tabs.length) % tabs.length;
+        if (e.key === "Home") n = 0;
+        if (e.key === "End") n = tabs.length - 1;
+        if (n >= 0) { e.preventDefault(); select(tabs[n].dataset.group!, true); }
+      });
+    });
+    const sync = () => {
+      if (!mq.matches) return;
+      const open = panels.find((p) => p.open) || panels[0];
+      select(open.dataset.group!);
+    };
+    mq.addEventListener("change", sync);
+    sync();
+  }
+</script>
+<style>
+  .concerns__grid { row-gap: var(--space-4); }
+  .concerns__aside { display: grid; gap: var(--space-3); align-content: start; }
+  .concerns__hint { max-width: 34ch; }
+  .concerns__tabs { display: none; position: relative; }
+
+  .concern { border-top: var(--hairline) solid var(--color-l1); }
+  .concern:last-child { border-bottom: var(--hairline) solid var(--color-l1); }
+  .concern__summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-height: 64px; cursor: pointer; list-style: none; }
+  .concern__summary::-webkit-details-marker { display: none; }
+  .concern__summary:hover .concern__label { color: var(--line); }
+  .concern__summary:active { opacity: .8; }
+  .concern__label { font-size: var(--text-title); font-weight: var(--weight-light); }
+  .concern__chev { width: 12px; height: 12px; border-right: var(--line-w) solid var(--line); border-bottom: var(--line-w) solid var(--line); transform: translateY(-3px) rotate(45deg); transition: transform var(--dur-fast) var(--ease-out); flex: none; }
+  .concern[open] .concern__chev { transform: translateY(3px) rotate(225deg); }
+  .concern__body { padding-bottom: var(--space-4); }
+  .concern[open] .concern__body { animation: panel-in var(--dur-fast) var(--ease-out); }
+
+  /* Depth: tasks placed along the vertical Dermline, from the surface down */
+  .depth { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); padding-left: var(--space-3); }
+  .depth::before { content: ""; position: absolute; left: 0; top: var(--space-1); bottom: var(--space-1); width: var(--line-w); background: var(--line); }
+  .depth__list { display: grid; gap: var(--space-3); padding-top: var(--space-1); }
+  .depth__item { position: relative; }
+  .depth__item::before { content: ""; position: absolute; left: calc(-1 * var(--space-3)); top: 0.7em; width: var(--space-2); height: var(--hairline); background: var(--line); }
+  .depth__problem { font-family: var(--font-display); font-size: var(--text-item); line-height: var(--leading-head); }
+  .depth__proc { color: var(--ink-2); font-size: var(--text-small); margin-top: var(--space-0); }
+  .depth__scale { display: flex; justify-content: space-between; gap: var(--space-2); margin-top: var(--space-3); color: var(--line); font-size: var(--text-tiny); }
+  .concern__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin-top: var(--space-4); }
+  .concern__price { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-2); font-size: var(--text-small); }
+
+  @media (min-width: 900px) {
+    .concerns__aside { grid-column: col-start 1 / span 4; position: sticky; top: calc(var(--header-h) + var(--space-4)); align-self: start; }
+    .concerns__panels { grid-column: col-start 6 / span 7; }
+    .depth { grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-4); padding-left: var(--space-4); }
+    .depth__item::before { left: calc(-1 * var(--space-4)); width: var(--space-3); }
+    .depth__list { gap: var(--space-4); }
+    .depth__problem { font-size: var(--text-title); }
+    .depth__proc { font-size: var(--text-body); }
+    .depth__scale { flex-direction: column; margin-top: 0; padding-block: var(--space-1); text-align: right; }
+
+    .is-tabs .concerns__tabs { display: grid; padding-left: var(--space-3); border-left: var(--hairline) solid var(--color-l1); }
+    .is-tabs .concern { border: 0; }
+    .is-tabs .concern__summary { display: none; }
+    .is-tabs .concern__body { padding-bottom: 0; }
+    .concerns__tab { position: relative; display: flex; align-items: center; min-height: 52px; padding: 0; background: none; border: 0; text-align: left; cursor: pointer; font-size: var(--text-body); color: var(--ink-2); }
+    .concerns__tab:hover { color: var(--ink); }
+    .concerns__tab:active { opacity: .8; }
+    .concerns__tab[aria-selected="true"] { color: var(--ink); font-weight: var(--weight-medium); }
+    .concerns__indicator { position: absolute; left: calc(-1 * var(--hairline)); top: 0; width: var(--line-w); height: 52px; background: var(--line); transition: transform 250ms var(--ease-out); }
+  }
+  @keyframes panel-in { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .concern[open] .concern__body { animation: none; }
+    .concerns__indicator, .concern__chev { transition: none; }
+  }
+</style>

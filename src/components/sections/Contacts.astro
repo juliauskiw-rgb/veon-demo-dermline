@@ -1,0 +1,56 @@
+---
+// Final point of every scenario: phone, Telegram, Viber, e-mail, address, hours (company.contacts, B-F003, B-F004).
+import Channels from "../Channels.astro";
+import Icon from "../Icon.astro";
+import { clinic } from "../../data/clinic";
+---
+<section id="contacts" class="contacts layer layer--l3" aria-labelledby="contacts-title" data-rec="R-003">
+  <div class="bleed contacts__grid">
+    <div class="contacts__main">
+      <div class="contacts__lead">
+        <h2 id="contacts-title" class="section__title">Запис і контакти</h2>
+        <a class="contacts__phone" href={clinic.phone.href}>{clinic.phone.display}</a>
+      </div>
+      <Channels variant="large" />
+      <p class="muted">Прийом за записом. Запис починається з консультації лікаря.</p>
+    </div>
+    <dl class="contacts__facts">
+      <div>
+        <dt>Адреса</dt>
+        <dd>{clinic.address}<br /><a class="tlink" href={clinic.map} rel="noopener" target="_blank"><Icon name="route" size={20} />Прокласти маршрут</a></dd>
+      </div>
+      <div>
+        <dt>Години роботи</dt>
+        <dd>{clinic.hours.map((h) => <span class="contacts__hour"><span>{h.days}</span> <span>{h.time}</span></span>)}</dd>
+      </div>
+      <div>
+        <dt>E-mail</dt>
+        <dd><a class="tlink" href={`mailto:${clinic.email}`}>{clinic.email}</a></dd>
+      </div>
+    </dl>
+  </div>
+</section>
+<style>
+  .contacts { padding-bottom: var(--space-section); }
+  .contacts__grid { row-gap: var(--space-5); }
+  .contacts__main { --pad: var(--space-4); display: grid; gap: var(--space-4); padding-left: var(--pad); }
+  /* The Dermline ends at the phone number */
+  .contacts__lead { display: grid; gap: var(--space-4); }
+  .contacts__lead { position: relative; }
+  .contacts__lead::before { content: ""; position: absolute; left: calc(-1 * var(--pad)); top: 0; bottom: calc(var(--text-phone) * 0.55); width: var(--line-w); background: var(--line); }
+  .contacts__lead::after { content: ""; position: absolute; left: calc(-1 * var(--pad)); bottom: calc(var(--text-phone) * 0.55); width: calc(var(--pad) - var(--space-2)); height: var(--line-w); background: var(--line); }
+  .contacts__phone { font-family: var(--font-display); font-size: var(--text-phone); line-height: 1.1; text-decoration: none; white-space: nowrap; color: var(--ink); justify-self: start; }
+  .contacts__phone:hover { color: var(--line); }
+  .contacts__phone:active { opacity: .8; }
+  .contacts__facts { display: grid; gap: var(--space-4); margin: 0; }
+  .contacts__facts dt { color: var(--ink-2); font-size: var(--text-small); }
+  .contacts__facts dd { margin: var(--space-1) 0 0; }
+  .contacts__hour { display: block; }
+  @media (min-width: 900px) {
+    .contacts__main { --pad: var(--space-5); grid-column: col-start 1 / span 7; }
+    .contacts__facts { grid-column: col-start 9 / span 4; align-self: end; }
+  }
+  @media (max-width: 420px) {
+    .contacts__phone { font-size: clamp(1.375rem, 7.2vw, 2rem); }
+  }
+</style>

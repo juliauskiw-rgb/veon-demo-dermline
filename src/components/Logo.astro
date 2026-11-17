@@ -1,0 +1,19 @@
+---
+// Client logo (B-F014, original PNG is light on transparent). On light layers it is painted in ink through a mask;
+// on the deepest layer the original light file is shown as is.
+import { getImage } from "astro:assets";
+import logo from "../assets/dermline-logo.png";
+interface Props { tone?: "ink" | "original"; class?: string; }
+const { tone = "ink", class: cls } = Astro.props;
+const webp = await getImage({ src: logo, format: "webp", width: 400 });
+---
+{tone === "ink"
+  ? <span class:list={["logo logo--ink", cls]} style={`--logo:url(${webp.src})`} role="img" aria-label="Dermline centre"></span>
+  : <img class:list={["logo", cls]} src={webp.src} width={400} height={Math.round(400 * logo.height / logo.width)} alt="Dermline centre" loading="lazy" decoding="async" />}
+<style>
+  .logo { display: block; height: auto; }
+  .logo--ink {
+    aspect-ratio: 522 / 242; background: currentColor;
+    -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat;
+  }
+</style>

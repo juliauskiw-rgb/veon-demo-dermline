@@ -1,0 +1,54 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import MobileBar from "../components/MobileBar.astro";
+import Hero from "../components/sections/Hero.astro";
+import Concerns from "../components/sections/Concerns.astro";
+import Offer from "../components/sections/Offer.astro";
+import Doctors from "../components/sections/Doctors.astro";
+import Equipment from "../components/sections/Equipment.astro";
+import Clinic from "../components/sections/Clinic.astro";
+import Trust from "../components/sections/Trust.astro";
+import Contacts from "../components/sections/Contacts.astro";
+import { clinic } from "../data/clinic";
+
+const title = "Dermline — центр естетичної косметології та дерматології у Львові";
+const description = "Ліцензований медичний центр на вул. Тернопільській 15: дерматологія, косметологія обличчя, естетика тіла, лазерна епіляція. Запис: +380 93 93 66 446.";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MedicalClinic",
+      "@id": "#clinic",
+      name: "Dermline",
+      description: "Медичний центр естетичної косметології та дерматології",
+      telephone: "+380939366446",
+      email: clinic.email,
+      address: { "@type": "PostalAddress", streetAddress: "вул. Тернопільська, 15", addressLocality: "Львів", addressCountry: "UA" },
+      openingHoursSpecification: [
+        { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "09:00", closes: "21:00" },
+        { "@type": "OpeningHoursSpecification", dayOfWeek: "Sunday", opens: "11:00", closes: "18:00" },
+      ],
+      medicalSpecialty: ["Dermatology", "PlasticSurgery"],
+      sameAs: clinic.socials.map((s) => s.href),
+    },
+    { "@type": "Physician", name: "Галина Миронович", jobTitle: "Головний лікар, дерматолог, косметолог", worksFor: { "@id": "#clinic" } },
+    { "@type": "Physician", name: "Володимир Миронович", jobTitle: "Пластичний хірург, хірург-онколог", worksFor: { "@id": "#clinic" } },
+  ],
+};
+---
+<Base lang="uk" title={title} description={description}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <Header slot="header" />
+  <Hero />
+  <Concerns />
+  <Offer />
+  <Doctors />
+  <Equipment />
+  <Clinic />
+  <Trust />
+  <Contacts />
+  <Fragment slot="footer"><Footer /><MobileBar /></Fragment>
+</Base>

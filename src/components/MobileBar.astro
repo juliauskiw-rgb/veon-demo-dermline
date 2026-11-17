@@ -1,0 +1,15 @@
+---
+// R-003: sticky contact bar on phones instead of a floating chat widget. Page gets bottom padding of the same height.
+import Channels from "./Channels.astro";
+---
+<nav class="mbar layer layer--l3" aria-label="Звʼязатися з клінікою" data-rec="R-003,S-R012">
+  <Channels variant="bar" />
+</nav>
+<style>
+  .mbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-bar); padding-bottom: env(safe-area-inset-bottom); border-top: var(--hairline) solid var(--color-l2); }
+  :global(body) { padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); }
+  @media (min-width: 1100px) {
+    .mbar { display: none; }
+    :global(body) { padding-bottom: 0; }
+  }
+</style>

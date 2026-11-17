@@ -1,0 +1,67 @@
+---
+// Signature «Обладнання за глибиною дії» (B-F006): bands step darker with depth, the light Dermline is the depth scale.
+import Button from "../Button.astro";
+import { equipment, preparations } from "../../data/clinic";
+---
+<section id="equipment" class="equipment layer layer--l2 section" aria-labelledby="equipment-title">
+  <div class="bleed equipment__head">
+    <h2 id="equipment-title" class="section__title">Обладнання за глибиною дії</h2>
+    <p class="section__lede">Кожен апарат працює на своїй глибині шкіри. Тому план процедур складає лікар після огляду.</p>
+  </div>
+  <ol class="equipment__bands" aria-label="Шари шкіри та обладнання">
+    {equipment.map((band, i) => (
+      <li class="band bleed" style={`--depth:${i}`}>
+        <div class="band__in" data-reveal style={`--reveal-delay:${i * 60}ms`}>
+          <p class="band__layer">{band.layer}</p>
+          <ul class="band__devices">
+            {band.devices.map((d) => (
+              <li class="device">
+                <span class="device__name">{d.name}</span>
+                <span class="device__use">{d.use}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </li>
+    ))}
+  </ol>
+  <div class="bleed equipment__foot">
+    <p class="equipment__preps"><span class="muted">Препарати:</span> {preparations.join(", ")}</p>
+    <Button href="#contacts">Записатися на консультацію</Button>
+  </div>
+</section>
+<style>
+  .equipment { padding-bottom: var(--space-section); }
+  .equipment__head { row-gap: var(--space-3); padding-bottom: var(--space-5); }
+  .equipment__bands { position: relative; }
+  .band { background: color-mix(in oklab, var(--color-l4) calc(var(--depth) * 13%), var(--color-l2)); }
+  .band__in {
+    position: relative; display: grid; gap: var(--space-2);
+    padding: var(--space-3) 0 var(--space-3) var(--space-4);
+    border-left: var(--line-w) solid var(--line);
+  }
+  .band__in::before { content: ""; position: absolute; left: 0; top: var(--space-3); width: var(--space-2); height: var(--line-w); background: var(--line); transform: translateY(0.6em); }
+  .band__layer { color: var(--line); font-size: var(--text-small); }
+  .band__devices { display: grid; gap: var(--space-2); }
+  .device { display: grid; gap: var(--space-0); }
+  .device__name { font-family: var(--font-display); font-size: var(--text-item); line-height: var(--leading-head); }
+  .device__use { color: var(--ink-2); font-size: var(--text-small); }
+  .equipment__foot { row-gap: var(--space-3); justify-items: start; padding-top: var(--space-5); }
+  .equipment__preps { max-width: 60ch; }
+
+  :global(.js) .band__in[data-reveal]:not(.is-visible) { transform: translateY(-12px); }
+
+  @media (min-width: 900px) {
+    .equipment__head > * { grid-column: col-start 1 / span 8; }
+    .band__in { grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); column-gap: var(--gutter); align-items: baseline; padding-block: var(--space-4); }
+    .band__in::before { top: var(--space-4); }
+    .band__devices { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--space-4); }
+    .equipment__foot { align-items: center; }
+    .equipment__preps { grid-column: col-start 1 / span 8; }
+    .equipment__foot :global(.btn) { grid-column: col-start 9 / span 4; justify-self: end; }
+  }
+  @media (max-width: 767px) {
+    .band__in { padding-left: var(--space-3); }
+    .band__in::before { width: var(--space-1); }
+  }
+</style>

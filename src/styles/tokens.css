@@ -1,0 +1,101 @@
+/* Hallmark · shape: depth descent, one page that steps from surface to depth · genre: editorial · theme: custom · job: book · idea: "Від поверхні вглиб: сторінка спускається шарами шкіри, лінія Dermline — шкала глибини" · vibe: "клінічна точність, тиша, глибина, довіра"
+ * paper: #FBF6F0 · accent: #5B3FA0 · display: Geologica · body: IBM Plex Sans · hero: великий H1 над лінією поверхні, під лінією пояснення, запис і три факти довіри, нижче фото особняка від третьої колонки до правого краю · nav: sticky cream bar, logo left, six anchors, phone as text, one booking button; on mobile phone icon, menu popover and bottom contact bar · footer: deepest layer, original light logo, anchors, future pages, socials, licence · imagery: client photos · signature: обладнання за глибиною дії, шкала шарів шкіри з апаратами
+ * axes: light/geometric-sans/chromatic-violet · posture: restrained · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S5 R4 V4 · weakest: E (energy), the descent of background layers and the drawn surface line carry the page instead of decoration */
+/* Hallmark · waive 23 · accent #5B3FA0 used only as the depth line, tab indicator, link underline and focus ring · posture restrained, accent stays under 5% of any viewport */
+/* Hallmark · waive 59 · the 64px gap is the header to hero top padding and the trust to contacts join, one layer with one continuous Dermline · the line must run unbroken into the phone number (concept.md signature end) */
+/* Line 1 of this file is the Hallmark stamp (docs/process/hallmark.md); fields come from design/concept.md. */
+:root {
+  /* Layers of depth: L0 surface → L4 deepest (concept.md §5 Look) */
+  --color-l0: #FBF6F0;
+  --color-l1: #EFE7DD;
+  --color-l2: #363B4E;
+  --color-l3: #262A3A;
+  --color-l4: #1D202C;
+
+  /* Ink */
+  --color-ink: #262A3A;
+  --color-ink-2: #5E6272;
+  --color-ink-on-dark: #FBF6F0;
+  --color-ink-2-on-dark: #B7B9C4;
+
+  /* Dermline line: surgical marker violet */
+  --color-line: #5B3FA0;
+  --color-line-on-dark: #B9A7EE;
+
+  /* Base names used by the demo base (global.css) */
+  --color-bg: var(--color-l0);
+  --color-text: var(--color-ink);
+  --color-accent: var(--color-line);
+
+  /* Faces: self-hosted via Fontsource (Layout imports) */
+  --font-display: "Geologica Variable", "Geologica", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+
+  /* Type scale: mobile 38/32/26/22/17/15 → desktop 88/56/40/28/18/15 */
+  --text-hero: clamp(2.375rem, 1.4rem + 4.2vw, 5.5rem);
+  --text-section: clamp(2rem, 1.45rem + 2.4vw, 3.5rem);
+  --text-statement: clamp(1.625rem, 1.2rem + 1.8vw, 2.5rem);
+  --text-title: clamp(1.375rem, 1.15rem + 0.9vw, 1.75rem);
+  --text-name: clamp(1.375rem, 1.1rem + 1.1vw, 2rem);
+  --text-item: clamp(1.25rem, 1.12rem + 0.5vw, 1.5rem);
+  --text-body: clamp(1.0625rem, 1.03rem + 0.12vw, 1.125rem);
+  --text-small: 0.9375rem;
+  --text-tiny: 0.8125rem;
+  --text-phone: clamp(2rem, 1.3rem + 3vw, 3.5rem);
+  --text-figure: clamp(3rem, 2rem + 4vw, 5.5rem);
+
+  --leading-tight: 1.04;
+  --leading-head: 1.15;
+  --leading-body: 1.55;
+
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+
+  /* Spacing rhythm on 8 */
+  --space-0: 4px;
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 40px;
+  --space-5: 64px;
+  --space-6: 104px;
+  --space-7: 160px;
+  --space-section: clamp(96px, 60px + 6vw, 160px);
+  --space: clamp(20px, 2px + 5vw, 80px); /* page gutter */
+
+  /* Grid */
+  --container: 1280px;
+  --gutter: 16px;
+  --edge: max(var(--space), calc((100% - var(--container)) / 2)); /* left edge of the content column inside a full-bleed wrapper */
+
+  /* Shape */
+  --radius: 4px;
+  --line-w: 2px;
+  --hairline: 1px;
+  --control-h: 52px;
+  --control-h-lg: 56px;
+  --header-h: 64px;
+  --bar-h: 64px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --dur: 500ms;
+  --dur-fast: 200ms;
+  --dur-press: 120ms;
+  --dur-line: 900ms;
+
+  --z-header: 50;
+  --z-bar: 40;
+  --z-tip: 60;
+}
+@media (min-width: 1100px) {
+  :root { --header-h: 80px; }
+}
+@media (max-width: 767px) {
+  :root { --dur-line: 600ms; --dur: 300ms; }
+}
+@media (min-width: 900px) {
+  :root { --gutter: 24px; }
+}

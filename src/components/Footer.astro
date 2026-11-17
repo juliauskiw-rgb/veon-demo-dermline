@@ -1,0 +1,45 @@
+---
+import Logo from "./Logo.astro";
+import FutureLink from "./FutureLink.astro";
+import { clinic, nav, futurePages, NOTE } from "../data/clinic";
+const anchors = nav.filter((n) => "href" in n) as { label: string; href: string }[];
+---
+<footer class="footer layer layer--l4">
+  <div class="bleed footer__grid">
+    <a class="footer__logo" href="#top" aria-label="Dermline, на початок сторінки"><Logo tone="original" /></a>
+    <nav class="footer__col" aria-label="Розділи сторінки">
+      <ul>{anchors.map((a) => <li><a class="footer__link" href={a.href}>{a.label}</a></li>)}</ul>
+    </nav>
+    <div class="footer__col">
+      <ul>{futurePages.map((p) => <li><FutureLink note={NOTE}>{p}</FutureLink></li>)}</ul>
+    </div>
+    <div class="footer__col footer__contact">
+      <a class="footer__link" href={clinic.phone.href}>{clinic.phone.display}</a>
+      <p>{clinic.address}</p>
+      <ul class="footer__social" aria-label="Соцмережі" data-rec="S-R014">
+        {clinic.socials.map((s) => <li><a class="footer__link" href={s.href} rel="noopener" target="_blank">{s.name}</a></li>)}
+      </ul>
+    </div>
+    <p class="footer__legal">Ліцензія МОЗ України. Медичний центр естетичної косметології та дерматології Dermline, Львів.</p>
+  </div>
+</footer>
+<style>
+  .footer { padding-block: var(--space-6) var(--space-5); font-size: var(--text-small); }
+  .footer__grid { row-gap: var(--space-4); }
+  .footer__logo { display: block; width: 148px; }
+  .footer__col ul { display: grid; gap: 0; }
+  .footer__link { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; color: var(--ink); }
+  .footer__link:hover { color: var(--line); text-decoration: underline; text-underline-offset: 5px; }
+  .footer__link:active { opacity: .8; }
+  .footer__contact { display: grid; gap: var(--space-1); align-content: start; }
+  .footer__contact p { color: var(--ink-2); }
+  .footer__col .footer__social { display: flex; flex-wrap: wrap; column-gap: var(--space-3); }
+  .footer__legal { color: var(--ink-2); padding-top: var(--space-4); border-top: var(--hairline) solid var(--color-l2); }
+  @media (min-width: 900px) {
+    .footer__logo { grid-column: col-start 1 / span 3; width: 168px; }
+    .footer__grid > nav.footer__col { grid-column: col-start 4 / span 2; }
+    .footer__grid > div.footer__col:not(.footer__contact) { grid-column: col-start 6 / span 3; }
+    .footer__contact { grid-column: col-start 9 / span 4; }
+    .footer__legal { grid-column: col-start 1 / span 12; margin-top: var(--space-4); }
+  }
+</style>
